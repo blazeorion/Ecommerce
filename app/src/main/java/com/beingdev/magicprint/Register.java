@@ -54,7 +54,10 @@ public class Register extends AppCompatActivity {
     RequestQueue requestQueue;
     boolean IMAGE_STATUS = false;
     Bitmap profilePicture;
-    public static final String TAG = "MyTag";
+    public static final String LOGIN_EMAIL =
+            "com.beingdev.magicprint.login.EMAIL";
+    public static final String LOGIN_PASSWORD =
+            "com.beingdev.magicprint.login.PASSWORD";
 
 
     @Override
@@ -127,6 +130,13 @@ public class Register extends AppCompatActivity {
 
                                     sendRegistrationEmail(name,email);
 
+                                    Intent intent = new Intent(Register.this, LoginActivity.class);
+                                    intent.putExtra(LOGIN_EMAIL, email);
+                                    intent.putExtra(LOGIN_PASSWORD, password);
+                                    startActivity(intent);
+
+                                    //startActivity(new Intent(Register.this,LoginActivity.class));
+                                    finish();
 
                                 } else
                                     Toasty.error(Register.this,"User Already Exist",Toast.LENGTH_SHORT,true).show();
@@ -208,17 +218,17 @@ public class Register extends AppCompatActivity {
     private void sendRegistrationEmail(final String name, final String emails) {
 
 
-                BackgroundMail.newBuilder(Register.this)
-                        .withSendingMessage("Sending Welcome Greetings to Your Email !")
-                        .withSendingMessageSuccess("Kindly Check Your Email now !")
-                        .withSendingMessageError("Failed to send password ! Try Again !")
-                        .withUsername("beingdevofficial@gmail.com")
-                        .withPassword("Singh@30")
-                        .withMailto(emails)
-                        .withType(BackgroundMail.TYPE_PLAIN)
-                        .withSubject("Greetings from Magic Print")
-                        .withBody("Hello Mr/Miss, "+ name + "\n " + getString(R.string.registermail1))
-                        .send();
+//                BackgroundMail.newBuilder(Register.this)
+//                        .withSendingMessage("Sending Welcome Greetings to Your Email !")
+//                        .withSendingMessageSuccess("Kindly Check Your Email now !")
+//                        .withSendingMessageError("Failed to send password ! Try Again !")
+//                        .withUsername("blazeshoppingcartapp@gmail.com")
+//                        .withPassword("BlazeShoppingCartApp333")
+//                        .withMailto(emails)
+//                        .withType(BackgroundMail.TYPE_PLAIN)
+//                        .withSubject("Greetings from Magic Print")
+//                        .withBody("Hello Mr/Miss, "+ name + "\n " + getString(R.string.registermail1))
+//                        .send();
 
     }
 
@@ -241,9 +251,12 @@ public class Register extends AppCompatActivity {
             try {
                 //parsing the Intent data and displaying it in the imageview
                 Uri imageUri = data.getData();//Geting uri of the data
-                InputStream imageStream = getContentResolver().openInputStream(imageUri);//creating an imputstrea
-                profilePicture = BitmapFactory.decodeStream(imageStream);//decoding the input stream to bitmap
-                image.setImageBitmap(profilePicture);
+                if(imageUri != null) {
+                    InputStream imageStream = getContentResolver().openInputStream(imageUri);//creating an imputstrea
+                    profilePicture = BitmapFactory.decodeStream(imageStream);//decoding the input stream to bitmap
+                    image.setImageBitmap(profilePicture);
+                }
+
                 IMAGE_STATUS = true;//setting the flag
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
